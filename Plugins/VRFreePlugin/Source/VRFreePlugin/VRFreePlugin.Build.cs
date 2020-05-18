@@ -79,6 +79,7 @@ public class VRFreePlugin : ModuleRules
             RuntimeDependencies.Add(Path.Combine(PluginDirectory, "VRfreeBasicTypesDotNetFramework.dll"));
             PublicAdditionalLibraries.Add(Path.Combine(PluginDirectory, "VRfreeC.lib"));
             RuntimeDependencies.Add(Path.Combine(PluginDirectory, "VRfreeC.dll"));
+            RuntimeDependencies.Add(Path.Combine(PluginDirectory, "HidSharp.dll"));
             RuntimeDependencies.Add(Path.Combine(PluginDirectory, "Newtonsoft.Json.dll"));
         }
     }

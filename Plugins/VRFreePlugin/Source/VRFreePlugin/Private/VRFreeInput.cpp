@@ -20,8 +20,8 @@ typedef void(*vrfree_calibrateSimplePtr)			(bool isRightHand, Quaternion directi
 typedef void(*vrfree_calibrateTargetHandDataPtr)	(bool isRightHand, HandData target);
 typedef HandData(*vrfree_getHandDataPtr)			(bool isRightHand, Vector3 cameraPosition, Quaternion cameraRotation);
 typedef HandData(*vrfree_getHandDataAbsolutePtr)	(bool isRightHand);
-typedef void(*vrfree_getTrackerDataPtr)				(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid);
-typedef void(*vrfree_getTrackerDataAbsolutePtr)		(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid);
+typedef void(*vrfree_getTrackerDataPtr)				(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, int trackerId);
+typedef void(*vrfree_getTrackerDataAbsolutePtr)		(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, int trackerId);
 typedef BYTE(*vrfree_statusCodePtr)					(void);
 typedef void(*vrfree_releasePtr)					(void);
 
@@ -319,7 +319,8 @@ void FVRFreeInput::Tick(float DeltaTime)
 	Vector3 trackerPosition;
 	Quaternion trackerRotation;
 	bool isTrackerPositionValid;
-	_vrfree_getTrackerData(trackerPosition, trackerRotation, isTrackerPositionValid);
+	int trackerId = 0;
+	_vrfree_getTrackerData(trackerPosition, trackerRotation, isTrackerPositionValid, trackerId);
 
 	FRotator leftRotationDelta = currentDataLeft.handRotation - LastFrameDataLeft.handRotation;
 	FRotator rightRotationDelta = currentDataRight.handRotation - LastFrameDataRight.handRotation;
