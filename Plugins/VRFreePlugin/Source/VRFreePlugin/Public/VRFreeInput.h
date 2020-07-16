@@ -129,6 +129,34 @@ public:
 		little3Rotation = FRotator(QuatFromVRFree(data.pinky2Rotation));
 
 		return;
+	}	
+	
+	void Init()
+	{
+		timeSinceLastDeviceData = 0;
+		timeSinceLastLeftHandData = 0;
+		timeSinceLastRightHandData = 0;
+		isWristPositionValid = false;
+		wristPosition = FVector::ZeroVector;
+		wristRotation = FRotator::ZeroRotator;
+		handRotation = FRotator::ZeroRotator;
+		thumb1Rotation = FRotator::ZeroRotator;
+		thumb2Rotation = FRotator::ZeroRotator;
+		thumb3Rotation = FRotator::ZeroRotator;
+		index1Rotation = FRotator::ZeroRotator;
+		index2Rotation = FRotator::ZeroRotator;
+		index3Rotation = FRotator::ZeroRotator;
+		middle1Rotation = FRotator::ZeroRotator;
+		middle2Rotation = FRotator::ZeroRotator;
+		middle3Rotation = FRotator::ZeroRotator;
+		ring1Rotation = FRotator::ZeroRotator;
+		ring2Rotation = FRotator::ZeroRotator;
+		ring3Rotation = FRotator::ZeroRotator;
+		little1Rotation = FRotator::ZeroRotator;
+		little2Rotation = FRotator::ZeroRotator;
+		little3Rotation = FRotator::ZeroRotator;
+
+		return;
 	}
 
 

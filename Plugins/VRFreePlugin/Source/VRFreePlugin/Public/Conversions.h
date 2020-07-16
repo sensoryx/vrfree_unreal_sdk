@@ -24,5 +24,5 @@ static inline FQuat QuatFromVRFree(Quaternion in)
 
 static inline Quaternion QuatToVRFree(FQuat in)
 {
-	return Quaternion(in.Y, in.Z, in.X, in.W);
+	return { in.Y, in.Z, in.X, in.W };
 }

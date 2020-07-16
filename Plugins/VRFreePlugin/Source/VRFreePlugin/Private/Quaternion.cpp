@@ -7,16 +7,16 @@
 const float radToDeg = (float)(180.0 / 3.14159265359);
 const float degToRad = (float)(3.14159265359 / 180.0);
 
-Quaternion::Quaternion() {
-	identity();
-}
-
-Quaternion::Quaternion(float xx, float yy, float zz, float ww) {
-	x = xx;
-	y = yy;
-	z = zz;
-	w = ww;
-}
+//Quaternion::Quaternion() {
+//	identity();
+//}
+//
+//Quaternion::Quaternion(float xx, float yy, float zz, float ww) {
+//	x = xx;
+//	y = yy;
+//	z = zz;
+//	w = ww;
+//}
 
 void Quaternion::identity() {
 	x = 0.0f;
@@ -92,7 +92,7 @@ Quaternion Quaternion::Inverse(Quaternion rotation) {
 	float lengthSq = rotation.LengthSquared();
 	if(lengthSq != 0.0f) {
 		float i = 1.0f / lengthSq;
-		return Quaternion(rotation.x * -i, rotation.y * -i, rotation.z * -i, rotation.w * i);
+		return { rotation.x * -i, rotation.y * -i, rotation.z * -i, rotation.w * i };
 	}
 	return rotation;
 }
@@ -121,7 +121,7 @@ Quaternion Quaternion::AngleAxis(float angle, Vector3 axis) {
 
 Quaternion Quaternion::Normalize(Quaternion q) {
 	float scale = 1.0f / q.Length();
-	return Quaternion(q.x * scale, q.y * scale, q.z * scale, q.w * scale);
+	return { q.x * scale, q.y * scale, q.z * scale, q.w * scale };
 }
 
 /// <summary>
@@ -164,12 +164,12 @@ void Quaternion::operator*=(const Quaternion & rhs) {
 }
 
 Quaternion operator*(const Quaternion & lhs, const Quaternion & rhs) {
-	return Quaternion(
-		lhs.w*rhs.x + lhs.x*rhs.w + lhs.y*rhs.z - lhs.z*rhs.y,
-		lhs.w*rhs.y + lhs.y*rhs.w + lhs.z*rhs.x - lhs.x*rhs.z,
-		lhs.w*rhs.z + lhs.z*rhs.w + lhs.x*rhs.y - lhs.y*rhs.x,
-		lhs.w*rhs.w - lhs.x*rhs.x - lhs.y*rhs.y - lhs.z*rhs.z
-	);
+	return {
+		lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
+		lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z,
+		lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x,
+		lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z
+	};
 }
 
 Vector3 operator*(const Quaternion & rotation, const Vector3 & point) {

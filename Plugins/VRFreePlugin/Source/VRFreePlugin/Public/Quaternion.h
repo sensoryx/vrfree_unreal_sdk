@@ -12,8 +12,8 @@ public:
 	float z;
 	float w;
 
-	Quaternion();
-	Quaternion(float xx, float yy, float zz, float ww);
+	//Quaternion();
+	//Quaternion(float xx, float yy, float zz, float ww);
 
 	void identity();
 	void multiply(Quaternion* q);
