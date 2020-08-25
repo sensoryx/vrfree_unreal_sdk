@@ -16,19 +16,19 @@
 
 typedef int(*vrfree_initPtr)						(wchar_t * VRfreeDotNetDllPath);
 typedef void(*vrfree_startPtr)						(void);
-typedef void(*vrfree_calibrateSimplePtr)			(bool isRightHand, Quaternion direction);
-typedef void(*vrfree_calibrateTargetHandDataPtr)	(bool isRightHand, HandData target);
+typedef void(*vrfree_calibratePoseSimplePtr)		(bool isRightHand, Quaternion direction);
+typedef void(*vrfree_calibratePosePtr)				(bool isRightHand, HandData target);
 typedef HandData(*vrfree_getHandDataPtr)			(bool isRightHand, Vector3 cameraPosition, Quaternion cameraRotation);
 typedef HandData(*vrfree_getHandDataAbsolutePtr)	(bool isRightHand);
-typedef void(*vrfree_getTrackerDataPtr)				(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, int trackerId);
-typedef void(*vrfree_getTrackerDataAbsolutePtr)		(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, int trackerId);
+typedef void(*vrfree_getTrackerDataPtr)				(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, unsigned char& outButtonPressed, int trackerId, bool fixedHeadModule);
+typedef void(*vrfree_getTrackerDataAbsolutePtr)		(Vector3& outTrackerPosition, Quaternion& outTrackerRotation, bool& outIsTrackerPositionValid, unsigned char& outButtonPressed, int trackerId);
 typedef BYTE(*vrfree_statusCodePtr)					(void);
 typedef void(*vrfree_releasePtr)					(void);
 
 vrfree_initPtr						_vrfree_init;
 vrfree_startPtr						_vrfree_start;
-vrfree_calibrateSimplePtr			_vrfree_calibrateSimple;
-vrfree_calibrateTargetHandDataPtr	_vrfree_calibrateTargetHandData;
+vrfree_calibratePoseSimplePtr		_vrfree_calibratePoseSimple;
+vrfree_calibratePosePtr				_vrfree_calibratePose;
 vrfree_getHandDataPtr				_vrfree_getHandData;
 vrfree_getHandDataAbsolutePtr		_vrfree_getHandDataAbsolute;
 vrfree_getTrackerDataPtr			_vrfree_getTrackerData;
@@ -36,13 +36,13 @@ vrfree_getTrackerDataAbsolutePtr	_vrfree_getTrackerDataAbsolute;
 vrfree_statusCodePtr				_vrfree_statusCode;
 vrfree_releasePtr					_vrfree_release;
 
-const BYTE NOT_CONNECTED = 0x01;
-const BYTE CONNECTING = 0x02;
-const BYTE CONNECTION_FAILED = 0x04; //will be cleared on reconnect
-const BYTE START_STREAMING = 0x08;
-const BYTE STREAMING = 0x10;
-const BYTE READING_FAILED = 0x20; //will be cleared on next valid read
-const BYTE INVALID_ARGUMENTS = 0x40;	//will be cleared on getHandData with valid input
+const BYTE NOT_CONNECTED			= 0x01;
+const BYTE CONNECTING				= 0x02;
+const BYTE CONNECTION_FAILED		= 0x04; //will be cleared on reconnect
+const BYTE START_STREAMING			= 0x08;
+const BYTE STREAMING				= 0x10;
+const BYTE READING_FAILED			= 0x20; //will be cleared on next valid read
+const BYTE INVALID_ARGUMENTS		= 0x40;	//will be cleared on getHandData with valid input
 
 
 FVRFreeInput::FVRFreeInput(const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler)
@@ -74,16 +74,16 @@ FVRFreeInput::FVRFreeInput(const TSharedRef< FGenericApplicationMessageHandler >
 		return;
 	}
 
-	_vrfree_init = (vrfree_initPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Init"));
-	_vrfree_start = (vrfree_startPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Start"));
-	_vrfree_calibrateSimple = (vrfree_calibrateSimplePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_calibratePoseSimple"));
-	_vrfree_calibrateTargetHandData = (vrfree_calibrateTargetHandDataPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_calibratePose"));
-	_vrfree_getHandData = (vrfree_getHandDataPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getHandData"));
-	_vrfree_getHandDataAbsolute = (vrfree_getHandDataAbsolutePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getHandDataAbsolute"));
-	_vrfree_getTrackerData = (vrfree_getTrackerDataPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getTrackerData"));
-	_vrfree_getTrackerDataAbsolute = (vrfree_getTrackerDataAbsolutePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getTrackerDataAbsolute"));
-	_vrfree_statusCode = (vrfree_statusCodePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_StatusCode"));
-	_vrfree_release = (vrfree_releasePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Shutdown"));
+	_vrfree_init						= (vrfree_initPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Init"));
+	_vrfree_start						= (vrfree_startPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Start"));
+	_vrfree_calibratePoseSimple			= (vrfree_calibratePoseSimplePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_calibratePoseSimple"));
+	_vrfree_calibratePose				= (vrfree_calibratePosePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_calibratePose"));
+	_vrfree_getHandData					= (vrfree_getHandDataPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getHandData"));
+	_vrfree_getHandDataAbsolute			= (vrfree_getHandDataAbsolutePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getHandDataAbsolute"));
+	_vrfree_getTrackerData				= (vrfree_getTrackerDataPtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getTrackerData"));
+	_vrfree_getTrackerDataAbsolute		= (vrfree_getTrackerDataAbsolutePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_getTrackerDataAbsolute"));
+	_vrfree_statusCode					= (vrfree_statusCodePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_StatusCode"));
+	_vrfree_release						= (vrfree_releasePtr)FPlatformProcess::GetDllExport(DLLHandle, TEXT("VRfree_Shutdown"));
 
 	FString DotNetPath = FPaths::Combine(*LibDir, FString("VRfreeDotNET.dll"));
 	TCHAR * DotNetPathPtr = new TCHAR[_MAX_PATH];
@@ -163,12 +163,12 @@ FString FVRFreeInput::GetStatusString()
 void FVRFreeInput::InitCalibrationPoses()
 {
 	
-	RightCalibrationPosePhase1.timeSinceLastDeviceData = 0;
+	RightCalibrationPosePhase1.cameraTimestamp = 0;
 	RightCalibrationPosePhase1.timeSinceLastLeftHandData = 0;
 	RightCalibrationPosePhase1.timeSinceLastRightHandData = 0;
 	RightCalibrationPosePhase1.isWristPositionValid = false;
-	RightCalibrationPosePhase1.wristPosition = Vector3(0.04399999439716339f, -0.4670912027359009f, 0.5118892788887024f);
-	RightCalibrationPosePhase1.wristRotation = Quaternion::AngleAxis(-9, Vector3(0, 1, 0)) * Quaternion { 0.08424509316682816f, -0.10160095989704132f, -0.716540515422821f, 0.6849451661109924f };
+	RightCalibrationPosePhase1.wristPosition =		Vector3(0.04399999439716339f, -0.4670912027359009f, 0.5118892788887024f);
+	RightCalibrationPosePhase1.wristRotation =		Quaternion::AngleAxis(-9, Vector3(0, 1, 0)) * Quaternion { 0.08424509316682816f, -0.10160095989704132f, -0.716540515422821f, 0.6849451661109924f };
 	RightCalibrationPosePhase1.handRotation =		Quaternion::AngleAxis(-9, Vector3(0,1,0)) * Quaternion{0.05909373238682747f,  -0.0752812847495079f, -0.7197818160057068f, 0.6875717043876648f};
 	RightCalibrationPosePhase1.thumb0Rotation =		Quaternion::AngleAxis(-9, Vector3(0,1,0)) * Quaternion{-0.31001660227775576f, -0.059205494821071628f, -0.21245388686656953f, 0.9247961044311523f};
 	RightCalibrationPosePhase1.thumb1Rotation =		Quaternion::AngleAxis(-9, Vector3(0,1,0)) * Quaternion{0.024540403857827188f, -0.12419610470533371f, -0.28649163246154787f, 0.9496818780899048f};
@@ -186,7 +186,7 @@ void FVRFreeInput::InitCalibrationPoses()
 	RightCalibrationPosePhase1.pinky1Rotation =		Quaternion::AngleAxis(-9, Vector3(0,1,0)) * Quaternion{-0.017767300829291345f,  0.1291399598121643f,  0.7429212331771851f, -0.6565635204315186f};
 	RightCalibrationPosePhase1.pinky2Rotation =		Quaternion::AngleAxis(-9, Vector3(0,1,0)) * Quaternion{-0.005735385697335005f, 0.07677850127220154f,0.7308371663093567f,-0.6781959533691406f};
 																		  
-	LeftCalibrationPosePhase1.timeSinceLastDeviceData = 0;
+	LeftCalibrationPosePhase1.cameraTimestamp = 0;
 	LeftCalibrationPosePhase1.timeSinceLastLeftHandData = 0;
 	LeftCalibrationPosePhase1.timeSinceLastRightHandData = 0;
 	LeftCalibrationPosePhase1.isWristPositionValid = false;
@@ -217,7 +217,7 @@ void FVRFreeInput::StartCalibration()
 	operatingMode = EVRFreePluginMode::CALIBRATION_1;
 
 	reportingLiveData = false; //pause the data collection, so our calibration pose is displayed
-
+	
 	LeftHandData.Load(LeftCalibrationPosePhase1);
 	RightHandData.Load(RightCalibrationPosePhase1);
 	calibrationCounter = 0.0f;
@@ -232,14 +232,19 @@ void FVRFreeInput::CancelCalibration()
 
 void FVRFreeInput::TickCalibration()
 {
+
+
+	Quaternion q = Quaternion();
+
 	if (LeftRapidMovementCounter == 0 && RightRapidMovementCounter == 0 && LeftActivityCounter > 35 && RightActivityCounter > 35)
 	{
 		calibrationCounter += 0.01f;
 
 		if (calibrationCounter > 1.0f)
 		{
-			_vrfree_calibrateTargetHandData(false, LeftCalibrationPosePhase1);
-			_vrfree_calibrateTargetHandData(true, RightCalibrationPosePhase1);
+
+			_vrfree_calibratePose(false, LeftCalibrationPosePhase1);
+			_vrfree_calibratePose(true, RightCalibrationPosePhase1);
 			operatingMode = EVRFreePluginMode::RUNNING;
 			reportingLiveData = true;
 		}
@@ -320,7 +325,8 @@ void FVRFreeInput::Tick(float DeltaTime)
 	Quaternion trackerRotation;
 	bool isTrackerPositionValid;
 	int trackerId = 0;
-	_vrfree_getTrackerData(trackerPosition, trackerRotation, isTrackerPositionValid, trackerId);
+	unsigned char buttonPressed;
+	_vrfree_getTrackerData(trackerPosition, trackerRotation, isTrackerPositionValid, buttonPressed, trackerId,false);
 
 	FRotator leftRotationDelta = currentDataLeft.handRotation - LastFrameDataLeft.handRotation;
 	FRotator rightRotationDelta = currentDataRight.handRotation - LastFrameDataRight.handRotation;

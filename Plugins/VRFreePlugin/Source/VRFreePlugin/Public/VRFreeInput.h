@@ -25,7 +25,7 @@ struct FVRFreeHandData {
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-		int timeSinceLastDeviceData;
+		int cameraTimestamp;
 
 	UPROPERTY(BlueprintReadWrite)
 		int timeSinceLastLeftHandData;
@@ -105,56 +105,56 @@ public:
 
 	void Load(HandData data)
 	{
-		timeSinceLastDeviceData = data.timeSinceLastDeviceData;
-		timeSinceLastLeftHandData = data.timeSinceLastLeftHandData;
-		timeSinceLastRightHandData = data.timeSinceLastRightHandData;
-		isWristPositionValid = data.isWristPositionValid;
-		wristPosition = VectorFromVRFree(data.wristPosition);
-		wristRotation = FRotator(QuatFromVRFree(data.wristRotation));
-		handRotation = FRotator(QuatFromVRFree(data.handRotation));
-		thumb1Rotation = FRotator(QuatFromVRFree(data.thumb0Rotation));
-		thumb2Rotation = FRotator(QuatFromVRFree(data.thumb1Rotation));
-		thumb3Rotation = FRotator(QuatFromVRFree(data.thumb2Rotation));
-		index1Rotation = FRotator(QuatFromVRFree(data.index0Rotation));
-		index2Rotation = FRotator(QuatFromVRFree(data.index1Rotation));
-		index3Rotation = FRotator(QuatFromVRFree(data.index2Rotation));
-		middle1Rotation = FRotator(QuatFromVRFree(data.middle0Rotation));
-		middle2Rotation = FRotator(QuatFromVRFree(data.middle1Rotation));
-		middle3Rotation = FRotator(QuatFromVRFree(data.middle2Rotation));
-		ring1Rotation = FRotator(QuatFromVRFree(data.ring0Rotation));
-		ring2Rotation = FRotator(QuatFromVRFree(data.ring1Rotation));
-		ring3Rotation = FRotator(QuatFromVRFree(data.ring2Rotation));
-		little1Rotation = FRotator(QuatFromVRFree(data.pinky0Rotation));
-		little2Rotation = FRotator(QuatFromVRFree(data.pinky1Rotation));
-		little3Rotation = FRotator(QuatFromVRFree(data.pinky2Rotation));
+		cameraTimestamp					= data.cameraTimestamp;
+		timeSinceLastLeftHandData		= data.timeSinceLastLeftHandData;
+		timeSinceLastRightHandData		= data.timeSinceLastRightHandData;
+		isWristPositionValid			= data.isWristPositionValid;
+		wristPosition					= VectorFromVRFree(data.wristPosition);
+		wristRotation					= FRotator(QuatFromVRFree(data.wristRotation));
+		handRotation					= FRotator(QuatFromVRFree(data.handRotation));
+		thumb1Rotation					= FRotator(QuatFromVRFree(data.thumb0Rotation));
+		thumb2Rotation					= FRotator(QuatFromVRFree(data.thumb1Rotation));
+		thumb3Rotation					= FRotator(QuatFromVRFree(data.thumb2Rotation));
+		index1Rotation					= FRotator(QuatFromVRFree(data.index0Rotation));
+		index2Rotation					= FRotator(QuatFromVRFree(data.index1Rotation));
+		index3Rotation					= FRotator(QuatFromVRFree(data.index2Rotation));
+		middle1Rotation					= FRotator(QuatFromVRFree(data.middle0Rotation));
+		middle2Rotation					= FRotator(QuatFromVRFree(data.middle1Rotation));
+		middle3Rotation					= FRotator(QuatFromVRFree(data.middle2Rotation));
+		ring1Rotation					= FRotator(QuatFromVRFree(data.ring0Rotation));
+		ring2Rotation					= FRotator(QuatFromVRFree(data.ring1Rotation));
+		ring3Rotation					= FRotator(QuatFromVRFree(data.ring2Rotation));
+		little1Rotation					= FRotator(QuatFromVRFree(data.pinky0Rotation));
+		little2Rotation					= FRotator(QuatFromVRFree(data.pinky1Rotation));
+		little3Rotation					= FRotator(QuatFromVRFree(data.pinky2Rotation));
 
 		return;
 	}	
 	
 	void Init()
 	{
-		timeSinceLastDeviceData = 0;
-		timeSinceLastLeftHandData = 0;
-		timeSinceLastRightHandData = 0;
-		isWristPositionValid = false;
-		wristPosition = FVector::ZeroVector;
-		wristRotation = FRotator::ZeroRotator;
-		handRotation = FRotator::ZeroRotator;
-		thumb1Rotation = FRotator::ZeroRotator;
-		thumb2Rotation = FRotator::ZeroRotator;
-		thumb3Rotation = FRotator::ZeroRotator;
-		index1Rotation = FRotator::ZeroRotator;
-		index2Rotation = FRotator::ZeroRotator;
-		index3Rotation = FRotator::ZeroRotator;
-		middle1Rotation = FRotator::ZeroRotator;
-		middle2Rotation = FRotator::ZeroRotator;
-		middle3Rotation = FRotator::ZeroRotator;
-		ring1Rotation = FRotator::ZeroRotator;
-		ring2Rotation = FRotator::ZeroRotator;
-		ring3Rotation = FRotator::ZeroRotator;
-		little1Rotation = FRotator::ZeroRotator;
-		little2Rotation = FRotator::ZeroRotator;
-		little3Rotation = FRotator::ZeroRotator;
+		cameraTimestamp					= 0;
+		timeSinceLastLeftHandData		= 0;
+		timeSinceLastRightHandData		= 0;
+		isWristPositionValid			= false;
+		wristPosition					= FVector::ZeroVector;
+		wristRotation					= FRotator::ZeroRotator;
+		handRotation					= FRotator::ZeroRotator;
+		thumb1Rotation					= FRotator::ZeroRotator;
+		thumb2Rotation					= FRotator::ZeroRotator;
+		thumb3Rotation					= FRotator::ZeroRotator;
+		index1Rotation					= FRotator::ZeroRotator;
+		index2Rotation					= FRotator::ZeroRotator;
+		index3Rotation					= FRotator::ZeroRotator;
+		middle1Rotation					= FRotator::ZeroRotator;
+		middle2Rotation					= FRotator::ZeroRotator;
+		middle3Rotation					= FRotator::ZeroRotator;
+		ring1Rotation					= FRotator::ZeroRotator;
+		ring2Rotation					= FRotator::ZeroRotator;
+		ring3Rotation					= FRotator::ZeroRotator;
+		little1Rotation					= FRotator::ZeroRotator;
+		little2Rotation					= FRotator::ZeroRotator;
+		little3Rotation					= FRotator::ZeroRotator;
 
 		return;
 	}
