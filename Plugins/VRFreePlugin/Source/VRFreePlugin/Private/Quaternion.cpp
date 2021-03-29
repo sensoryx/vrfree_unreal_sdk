@@ -7,17 +7,6 @@
 const float radToDeg = (float)(180.0 / 3.14159265359);
 const float degToRad = (float)(3.14159265359 / 180.0);
 
-//Quaternion::Quaternion() {
-//	identity();
-//}
-//
-//Quaternion::Quaternion(float xx, float yy, float zz, float ww) {
-//	x = xx;
-//	y = yy;
-//	z = zz;
-//	w = ww;
-//}
-
 void Quaternion::identity() {
 	x = 0.0f;
 	y = 0.0f;
@@ -92,7 +81,7 @@ Quaternion Quaternion::Inverse(Quaternion rotation) {
 	float lengthSq = rotation.LengthSquared();
 	if(lengthSq != 0.0f) {
 		float i = 1.0f / lengthSq;
-		return { rotation.x * -i, rotation.y * -i, rotation.z * -i, rotation.w * i };
+		return Quaternion{ rotation.x * -i, rotation.y * -i, rotation.z * -i, rotation.w * i };
 	}
 	return rotation;
 }
@@ -121,7 +110,7 @@ Quaternion Quaternion::AngleAxis(float angle, Vector3 axis) {
 
 Quaternion Quaternion::Normalize(Quaternion q) {
 	float scale = 1.0f / q.Length();
-	return { q.x * scale, q.y * scale, q.z * scale, q.w * scale };
+	return Quaternion{ q.x * scale, q.y * scale, q.z * scale, q.w * scale };
 }
 
 /// <summary>
@@ -148,7 +137,7 @@ Quaternion Quaternion::Euler(float x, float y, float z) {
 	result.z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
 	result.y = cosYawOver2 * sinPitchOver2 * cosRollOver2 + sinYawOver2 * cosPitchOver2 * sinRollOver2;
 	result.x = sinYawOver2 * cosPitchOver2 * cosRollOver2 - cosYawOver2 * sinPitchOver2 * sinRollOver2;*/
-	Quaternion result = AngleAxis(y, Vector3(0, 1, 0)) * AngleAxis(x, Vector3(1, 0, 0)) * AngleAxis(z, Vector3(0, 0, 1));
+	Quaternion result = AngleAxis(y, Vector3{ 0, 1, 0 }) * AngleAxis(x, Vector3{ 1, 0, 0 }) * AngleAxis(z, Vector3{ 0, 0, 1 });
 	return result;
 }
 
@@ -164,7 +153,7 @@ void Quaternion::operator*=(const Quaternion & rhs) {
 }
 
 Quaternion operator*(const Quaternion & lhs, const Quaternion & rhs) {
-	return {
+	return Quaternion{
 		lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
 		lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z,
 		lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x,

@@ -13,7 +13,7 @@ static inline FVector VectorFromVRFree(Vector3 in)
 
 static inline Vector3 VectorToVRFree(FVector in)
 {
-	return Vector3(in.Y / 100.0f, in.Z/ 100.0f, in.X / 100.0f);
+	return Vector3 { in.Y / 100.0f, in.Z / 100.0f, in.X / 100.0f };
 }
 
 static inline FQuat QuatFromVRFree(Quaternion in)

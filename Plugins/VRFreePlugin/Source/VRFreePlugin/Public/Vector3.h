@@ -7,9 +7,6 @@ public:
 	float y;
 	float z;
 
-	Vector3();
-	Vector3(float xx, float yy, float zz);
-
 	void right();
 	void up();
 	void forward();

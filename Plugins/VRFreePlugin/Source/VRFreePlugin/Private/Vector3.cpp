@@ -2,18 +2,6 @@
 
 #include <math.h>
 
-Vector3::Vector3() {
-	x = 0.0f;
-	y = 0.0f;
-	z = 0.0f;
-}
-
-Vector3::Vector3(float xx, float yy, float zz) {
-	x = xx; 
-	y = yy;
-	z = zz;
-}
-
 void Vector3::right() {
 	x = 1.0f;
 	y = 0.0f;
@@ -56,7 +44,7 @@ float Vector3::dot(Vector3* v) {
 
 Vector3 Vector3::normalized() {
 	float num = Vector3::Magnitude(*this);
-	Vector3 returnVal(x, y, z);
+	Vector3 returnVal{ x, y, z };
 	if(num > 1E-05f) {
 		returnVal.x /= num;
 		returnVal.y /= num;
@@ -99,7 +87,7 @@ float Vector3::Dot(Vector3 lhs, Vector3 rhs) {
 }
 
 Vector3 Vector3::Cross(Vector3 lhs, Vector3 rhs) {
-	return Vector3(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
+	return Vector3{ lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x };
 }
 
 float Vector3::Angle(Vector3 from, Vector3 to) {
@@ -111,17 +99,17 @@ float Vector3::SignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
 }
 
 Vector3 operator+(const Vector3 & a, const Vector3 & b) {
-	return Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+	return Vector3{ a.x + b.x, a.y + b.y, a.z + b.z };
 }
 
 Vector3 operator-(const Vector3 & a, const Vector3 & b) {
-	return Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+	return Vector3{ a.x - b.x, a.y - b.y, a.z - b.z };
 }
 
 Vector3 operator*(const Vector3 & a, const float & d) {
-	return Vector3(a.x*d, a.y*d, a.z*d);
+	return Vector3{ a.x * d, a.y * d, a.z * d };
 }
 
 Vector3 operator*(const float & d, const Vector3 & a) {
-	return Vector3(a.x*d, a.y*d, a.z*d);
+	return Vector3{ a.x * d, a.y * d, a.z * d };
 }

@@ -4,16 +4,13 @@
 #include "Vector3.h"
 #include <iostream>
 
- struct VRFREEPLUGIN_API Quaternion {
+struct Quaternion {
 
 public:
 	float x;
 	float y;
 	float z;
 	float w;
-
-	//Quaternion();
-	//Quaternion(float xx, float yy, float zz, float ww);
 
 	void identity();
 	void multiply(Quaternion* q);
