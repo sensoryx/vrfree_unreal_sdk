@@ -2,7 +2,7 @@
 #include "Quaternion.h"
 
 struct HandData {
-	unsigned int cameraTimestamp;
+	int64_t cameraTimestamp;
 	int timeSinceLastLeftHandData;
 	int timeSinceLastRightHandData;
 	bool isWristPositionValid;
